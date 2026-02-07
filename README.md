@@ -8,6 +8,12 @@ Simple webpage for the hajfest.
 podman build -t hajfest .
 ```
 
+## HTTPS
+
+```bash
+podman network create hajnet
+```
+
 ## Run
 
 ```bash
@@ -25,21 +31,6 @@ Site available at: http://localhost:8080
 ```bash
 podman stop hajfest
 podman rm hajfest
-```
-
-## Rebuild and run
-
-```bash
-podman stop hajfest
-podman rm hajfest
-podman build -t hajfest .
-podman run -d -p 8080:80 --name hajfest hajfest
-```
-
-## HTTPS
-
-```bash
-podman network create hajnet
 ```
 
 ### Run Caddy
@@ -60,6 +51,36 @@ podman run -d \
 ### Stop & Remove
 
 ```bash
+podman stop hajfest-caddy 
+podman rm hajfest-caddy 
+```
+
+## Run everything
+```bash
+podman network create hajnet
+
+podman run -d \
+  --name hajfest \
+  --network hajnet \
+  --restart unless-stopped \
+  hajfest
+
+podman run -d \
+    --name hajfest-caddy \
+    --network hajnet \
+    --dns 8.8.8.8 \
+    -p 80:80 \
+    -p 443:443 \
+    -v ./Caddyfile:/etc/caddy/Caddyfile:Z \
+    -v caddy_data:/data \
+    --restart unless-stopped \
+    docker.io/caddy:alpine 
+```
+
+## Stop everything
+```bash
+podman stop hajfest
+podman rm hajfest
 podman stop hajfest-caddy 
 podman rm hajfest-caddy 
 ```
