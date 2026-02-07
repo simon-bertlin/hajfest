@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🦈 Snabba Cash med S-Hajen & E-Fin 🦈</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bangers&family=Roboto:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .money-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .money {
+            position: absolute;
+            font-size: 2rem;
+            animation: fall linear infinite;
+            opacity: 0.3;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .logo {
+            font-family: 'Bangers', cursive;
+            font-size: 3.5rem;
+            color: #ffd700;
+            text-shadow: 3px 3px 0 #ff6b35, 6px 6px 0 rgba(0,0,0,0.3);
+            letter-spacing: 3px;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            color: #e94560;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
+        .shark-emoji {
+            font-size: 4rem;
+            display: block;
+            margin: 1rem 0;
+        }
+
+        .warning-banner {
+            background: repeating-linear-gradient(
+                45deg,
+                #ff6b35,
+                #ff6b35 10px,
+                #ffd700 10px,
+                #ffd700 20px
+            );
+            color: #000;
+            padding: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 2rem 0;
+            border-radius: 5px;
+            font-size: 1.1rem;
+        }
+
+        .benefits {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .benefit-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.3);
+        }
+
+        .benefit-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .benefit-card h3 {
+            color: #ffd700;
+            margin-bottom: 0.5rem;
+        }
+
+        .loan-form {
+            background: rgba(0, 0, 0, 0.4);
+            border: 3px solid #e94560;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .loan-form h2 {
+            font-family: 'Bangers', cursive;
+            color: #ffd700;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #ffd700;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 15px rgba(233, 69, 96, 0.5);
+        }
+
+        .form-group select option {
+            background: #1a1a2e;
+            color: #fff;
+        }
+
+        .range-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .range-container input[type="range"] {
+            flex: 1;
+            -webkit-appearance: none;
+            height: 10px;
+            border-radius: 5px;
+            background: linear-gradient(to right, #ffd700, #e94560);
+        }
+
+        .range-container input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+        }
+
+        .amount-display {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffd700;
+            min-width: 120px;
+            text-align: right;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            font-family: 'Bangers', cursive;
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #ffd700 0%, #ff6b35 100%);
+            color: #1a1a2e;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+        }
+
+        .fine-print {
+            background: rgba(233, 69, 96, 0.2);
+            border-left: 4px solid #e94560;
+            padding: 1rem;
+            margin: 2rem 0;
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .fine-print h4 {
+            color: #e94560;
+            margin-bottom: 0.5rem;
+        }
+
+        .testimonials {
+            margin: 2rem 0;
+        }
+
+        .testimonials h2 {
+            font-family: 'Bangers', cursive;
+            color: #ffd700;
+            font-size: 2rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid #ffd700;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 0.5rem;
+        }
+
+        .testimonial-author {
+            color: #ffd700;
+            font-weight: bold;
+        }
+
+        .result-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result-modal.active {
+            display: flex;
+        }
+
+        .result-content {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border: 4px solid #ffd700;
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            text-align: center;
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-content h2 {
+            font-family: 'Bangers', cursive;
+            color: #ffd700;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .result-content .approved-icon {
+            font-size: 5rem;
+            margin: 1rem 0;
+        }
+
+        .result-content p {
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .result-content .interest-rate {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #e94560;
+            margin: 1rem 0;
+        }
+
+        .close-btn {
+            margin-top: 1.5rem;
+            padding: 1rem 2rem;
+            font-family: 'Bangers', cursive;
+            font-size: 1.3rem;
+            background: #e94560;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.1);
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+            margin-top: 2rem;
+        }
+
+        footer p {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+        }
+
+        .contact-info {
+            margin-top: 1rem;
+            color: #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="money-rain" id="moneyRain"></div>
+
+    <div class="container">
+        <header>
+            <span class="shark-emoji">🦈💰</span>
+            <h1 class="logo">S-HAJEN & E-FIN</h1>
+            <p class="tagline">"Vi simmar aldrig iväg från en deal... men du simmar aldrig ifrån oss"</p>
+        </header>
+
+        <div class="warning-banner">
+            🦈 PENGARNA PÅ KONTOT INNAN DU HINNER SÄGA "HAJ"* 🦈
+        </div>
+
+        <div class="benefits">
+            <div class="benefit-card">
+                <div class="icon">🦈</div>
+                <h3>Ingen kreditupplysning</h3>
+                <p>Vi luktar oss fram till din ekonomi ändå</p>
+            </div>
+            <div class="benefit-card">
+                <div class="icon">⚡</div>
+                <h3>Hajsnabbt</h3>
+                <p>Snabbare än en vithaj på jakt</p>
+            </div>
+            <div class="benefit-card">
+                <div class="icon">🩸</div>
+                <h3>Personlig service</h3>
+                <p>Vi känner doften av utebliven betalning på mils avstånd</p>
+            </div>
+            <div class="benefit-card">
+                <div class="icon">🌊</div>
+                <h3>Diskret</h3>
+                <p>Syns som "Hajens Fisk & Skaldjur" på kontoutdraget</p>
+            </div>
+        </div>
+
+        <div class="loan-form">
+            <h2>🦈 DYK NER I SKULD - ANSÖK NU! 🦈</h2>
+            
+            <form id="loanForm">
+                <div class="form-group">
+                    <label for="name">Vad heter du, kompis?</label>
+                    <input type="text" id="name" placeholder="Ditt namn (eller alias)" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Hur mycket behöver du?</label>
+                    <div class="range-container">
+                        <input type="range" id="amount" min="1000" max="100000" value="10000" step="1000">
+                        <span class="amount-display" id="amountDisplay">10 000 kr</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="reason">Varför behöver du pengarna?</label>
+                    <select id="reason" required>
+                        <option value="">Välj anledning...</option>
+                        <option value="casino">🎰 Casino-skulder</option>
+                        <option value="ex">💔 Betala tillbaka till ex:et</option>
+                        <option value="crypto">📉 Köpa dippen</option>
+                        <option value="party">🎉 Fest (ingen frågar varför)</option>
+                        <option value="other">🤫 Fråga inte</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="payback">När kan du betala tillbaka?</label>
+                    <select id="payback" required>
+                        <option value="">Välj tidpunkt...</option>
+                        <option value="soon">📅 Snart (löst definierat)</option>
+                        <option value="month">🗓️ Nästa månad (kanske)</option>
+                        <option value="later">🤷 Senare (optimistiskt)</option>
+                        <option value="never">😅 Låt oss inte prata om det</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">🦈 MATA HAJEN - GODKÄNN LÅN 🦈</button>
+            </form>
+        </div>
+
+        <div class="fine-print">
+            <h4>🦈 Villkor (läs snabbt, hajen väntar inte):</h4>
+            <p>
+                * Ränta: Endast 847% effektiv ränta (kan variera beroende på S-Hajens aptit).<br>
+                * Vid utebliven betalning aktiveras "fena-avgift" samt hembesök från akvariet.<br>
+                * Din TV, soffa och/eller familjemedlemmar kan användas som hajmat... eh, säkerhet.<br>
+                * "Innan du hinner säga haj" gäller endast om S-Hajen inte spelar Valheim.<br>
+                * Genom att klicka "Godkänn" simmar du in i vårt revir för alltid.<br>
+                * Vi tar inget ansvar för mystiska försvinnanden i djupt vatten.
+            </p>
+        </div>
+
+        <div class="testimonials">
+            <h2>🦈 ÖVERLEVANDE KUNDER 🦈</h2>
+            
+            <div class="testimonial">
+                <p class="testimonial-text">"Jag fick pengarna direkt! Nu bor jag visserligen på en flotte, men det är en FIN flotte."</p>
+                <p class="testimonial-author">- Bengt-Åke, 54 (tidigare landkrabba)</p>
+            </div>
+            
+            <div class="testimonial">
+                <p class="testimonial-text">"S-Hajen är som en far för mig. En väldigt hungrig far med vassa tänder."</p>
+                <p class="testimonial-author">- Kevin, 28 (plats: okänt djup)</p>
+            </div>
+            
+            <div class="testimonial">
+                <p class="testimonial-text">"5 stjärnor! E-Fin hjälpte mig köpa dippen. Sedan dippade det mer. Nu simmar jag med hajarna!"</p>
+                <p class="testimonial-author">- CryptoFisken_99, 23</p>
+            </div>
+
+            <div class="testimonial">
+                <p class="testimonial-text">"3 stjärnor! Chrippa-kräfta är alltid en kräfta, jag väljer att simma iväg"</p>
+                <p class="testimonial-author">- Chrippa-kräfta, 36</p>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 S-Hajen & E-Fin Akvatiska Investeringar AB (registrerat på havets botten)</p>
+            <p class="contact-info">
+                📍 Under bryggan vid båtklubben, kajplats 47<br>
+                📞 Blås i snäckan tre gånger<br>
+                📧 kontakt@hajrevansen.se
+            </p>
+        </footer>
+    </div>
+
+    <div class="result-modal" id="resultModal">
+        <div class="result-content">
+            <h2>🦈 HAJEN HAR BITIT! 🦈</h2>
+            <div class="approved-icon">✅</div>
+            <p>Ditt lån på <strong id="approvedAmount"></strong> är GODKÄNT!</p>
+            <p>Din personliga ränta (baserad på blodvärde):</p>
+            <div class="interest-rate" id="interestRate"></div>
+            <p id="personalMessage"></p>
+            <p><small>E-Fin kommer simma förbi dig snart. <br>Håll dig flytande. <strong>Bokstavligen.</strong></small></p>
+            <button class="close-btn" onclick="closeModal()">JAG DYKER NER I DETTA</button>
+        </div>
+    </div>
+
+    <script>
+        // Falling money animation
+        function createMoney() {
+            const container = document.getElementById('moneyRain');
+            const moneySymbols = ['💵', '💰', '🦈', '🐟', '💲', '🌊'];
+            
+            for (let i = 0; i < 20; i++) {
+                const money = document.createElement('div');
+                money.className = 'money';
+                money.textContent = moneySymbols[Math.floor(Math.random() * moneySymbols.length)];
+                money.style.left = Math.random() * 100 + 'vw';
+                money.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                money.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(money);
+            }
+        }
+        createMoney();
+
+        // Amount slider
+        const amountSlider = document.getElementById('amount');
+        const amountDisplay = document.getElementById('amountDisplay');
+        
+        amountSlider.addEventListener('input', function() {
+            amountDisplay.textContent = parseInt(this.value).toLocaleString('sv-SE') + ' kr';
+        });
+
+        // Form submission
+        document.getElementById('loanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const amount = parseInt(document.getElementById('amount').value);
+            const reason = document.getElementById('reason').value;
+            const payback = document.getElementById('payback').value;
+            
+            // Calculate "interest rate" based on inputs
+            let baseRate = 847;
+            if (reason === 'casino') baseRate += 200;
+            if (reason === 'crypto') baseRate += 150;
+            if (payback === 'never') baseRate += 500;
+            if (payback === 'later') baseRate += 300;
+            if (amount > 50000) baseRate += 100;
+            
+            // Random factor (S-Hajens hunger)
+            baseRate += Math.floor(Math.random() * 200);
+            
+            // Personal messages
+            const messages = {
+                'casino': `${name}, vi förstår. Huset vinner alltid... men S-Hajen biter hårdare.`,
+                'ex': `${name}, kärlek är dyrt. Men inte lika dyrt som att bli hajmat.`,
+                'crypto': `${name}, WAGMI... eller så blir du fiskföda. S-Hajen & E-Fin GMI alltid.`,
+                'party': `${name}, YOLO som man säger! (You Only Live Once - särskilt nära hajar)`,
+                'other': `${name}, inga frågor ställda. Hajar frågar aldrig. Vi bara biter.`
+            };
+            
+            document.getElementById('approvedAmount').textContent = amount.toLocaleString('sv-SE') + ' kr';
+            document.getElementById('interestRate').textContent = baseRate + '% ränta';
+            document.getElementById('personalMessage').textContent = messages[reason];
+            
+            document.getElementById('resultModal').classList.add('active');
+        });
+
+        function closeModal() {
+            document.getElementById('resultModal').classList.remove('active');
+        }
+
+        // Close modal on outside click
+        document.getElementById('resultModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+    </script>
+</body>
+</html>
