@@ -8,7 +8,7 @@ Simple webpage for the hajfest.
 podman build -t hajfest .
 ```
 
-## HTTPS
+## Podman network
 
 ```bash
 podman network create hajnet
@@ -33,7 +33,7 @@ podman stop hajfest
 podman rm hajfest
 ```
 
-### Run Caddy
+### Run Caddy, for https
 
 ```bash
 podman run -d \
@@ -83,4 +83,16 @@ podman stop hajfest
 podman rm hajfest
 podman stop hajfest-caddy 
 podman rm hajfest-caddy 
+```
+
+## Start on boot
+
+Make sure to change the directory of the caddyfile if needed.
+
+```bash
+podman generate systemd --new --name hajfest --files
+podman generate systemd --new --name hajfest-caddy --files
+mv container-hajfest.service container-hajfest-caddy.service ~/.config/systemd/user/
+systemctl --user daemon-reload
+systemctl --user enable container-hajfest.service container-hajfest-caddy.service
 ```
